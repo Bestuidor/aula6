@@ -1,70 +1,51 @@
 <?php
-$content = ob_get_clean();
-?>
 
-<?php
+require_once "../src/Config/Conexao.php";
+require_once "../src/Model/pessoa.php";
+require_once "../src/DAO/pessoaDAO.php";
 
-$content = '
-<div class="container mt-4">
+use App\Model\Pessoa;
+use App\DAO\PessoaDAO;
 
-    <h2>Cadastro de Pessoa</h2>
+// Verifica se o formulário foi enviado
+if ($_SERVER["REQUEST_METHOD"] !== "POST") {
+    header("Location: pessoa-cadastrar.php");
+    exit;
+}
 
-    <form action="pessoa-cadastrar.php" method="POST">
+// Recebe os dados
+$nome = $_POST["nome"] ?? "";
+$telefone = $_POST["telefone"] ?? "";
+$cpf = $_POST["cpf"] ?? "";
+$endereco = $_POST["endereco"] ?? "";
 
-        <div class="mb-3">
-            <label for="nome" class="form-label">Nome</label>
-            <input 
-                type="text" 
-                class="form-control" 
-                id="nome" 
-                name="nome" 
-                maxlength="100" 
-                required>
-        </div>
+// Cria o objeto Pessoa
+$pessoa = new Pessoa();
 
-        <div class="mb-3">
-            <label for="telefone" class="form-label">Telefone</label>
-            <input 
-                type="text" 
-                class="form-control" 
-                id="telefone" 
-                name="telefone" 
-                maxlength="15">
-        </div>
+$pessoa->setNome($nome);
+$pessoa->setTelefone($telefone);
+$pessoa->setCpf($cpf);
+$pessoa->setEndereco($endereco);
 
-        <div class="mb-3">
-            <label for="cpf" class="form-label">CPF</label>
-            <input 
-                type="text" 
-                class="form-control" 
-                id="cpf" 
-                name="cpf" 
-                maxlength="11" 
-                required>
-        </div>
+// Cria o DAO
+$pessoaDAO = new PessoaDAO();
 
-        <div class="mb-3">
-            <label for="endereco" class="form-label">Endereço</label>
-            <input 
-                type="text" 
-                class="form-control" 
-                id="endereco" 
-                name="endereco" 
-                maxlength="255">
-        </div>
+// Cadastra
+if ($pessoaDAO->cadastrar($pessoa)) {
 
-        <button type="submit" class="btn btn-primary">
-            Cadastrar
-        </button>
+    echo "
+        <script>
+            alert('Pessoa cadastrada com sucesso!');
+            window.location.href = 'listar.php';
+        </script>
+    ";
 
-    </form>
+} else {
 
-</div>
-';
-
-include "layout.php";
-?>
-<?php
-require "footer.php";
-
-?>
+    echo "
+        <script>
+            alert('Erro: este CPF já está cadastrado!');
+            window.location.href = 'pessoa-cadastrar.php';
+        </script>
+    ";
+}

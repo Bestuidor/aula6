@@ -10,8 +10,6 @@ class Pessoa
     private $cpf;
     private $endereco;
 
-    // Getters e Setters
-
     public function getId()
     {
         return $this->id;

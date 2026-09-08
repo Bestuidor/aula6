@@ -1,44 +1,93 @@
+<!DOCTYPE html>
+<html lang="pt-br">
 
-<?php
+<head>
+    <meta charset="UTF-8">
 
-require_once "../src/Config/Conexao.php";
+    <title>Cadastrar Pessoa</title>
 
-use App\Config\Conexao;
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
 
-$conexao = Conexao::conectar();
+<body>
 
-$nome = $_POST["nome"];
-$telefone = $_POST["telefone"];
-$cpf = $_POST["cpf"];
-$endereco = $_POST["endereco"];
+<div class="container mt-5">
 
-// Verifica se o CPF já existe
-$sql = "SELECT id FROM pessoas WHERE cpf = :cpf";
+    <h1 class="mb-4">Cadastrar Pessoa</h1>
 
-$stmt = $conexao->prepare($sql);
-$stmt->bindValue(":cpf", $cpf);
-$stmt->execute();
+    <form action="pessoa-create.php" method="POST">
 
-if ($stmt->fetch()) {
-    echo "Erro: este CPF já está cadastrado!";
-    exit;
-}
+        <div class="mb-3">
+            <label for="nome" class="form-label">
+                Nome
+            </label>
 
-// Cadastra a pessoa
-$sql = "INSERT INTO pessoas 
-        (nome, telefone, cpf, endereco)
-        VALUES 
-        (:nome, :telefone, :cpf, :endereco)";
+            <input
+                type="text"
+                name="nome"
+                id="nome"
+                class="form-control"
+                required
+            >
+        </div>
 
-$stmt = $conexao->prepare($sql);
 
-$stmt->bindValue(":nome", $nome);
-$stmt->bindValue(":telefone", $telefone);
-$stmt->bindValue(":cpf", $cpf);
-$stmt->bindValue(":endereco", $endereco);
+        <div class="mb-3">
+            <label for="telefone" class="form-label">
+                Telefone
+            </label>
 
-if ($stmt->execute()) {
-    echo "Pessoa cadastrada com sucesso!";
-} else {
-    echo "Erro ao cadastrar pessoa.";
-}
+            <input
+                type="text"
+                name="telefone"
+                id="telefone"
+                class="form-control"
+            >
+        </div>
+
+
+        <div class="mb-3">
+            <label for="cpf" class="form-label">
+                CPF
+            </label>
+
+            <input
+                type="text"
+                name="cpf"
+                id="cpf"
+                class="form-control"
+                maxlength="11"
+                required
+            >
+        </div>
+
+
+        <div class="mb-3">
+            <label for="endereco" class="form-label">
+                Endereço
+            </label>
+
+            <input
+                type="text"
+                name="endereco"
+                id="endereco"
+                class="form-control"
+            >
+        </div>
+
+
+        <button type="submit" class="btn btn-success">
+            Cadastrar
+        </button>
+
+        <a href="listar.php" class="btn btn-secondary">
+            Voltar
+        </a>
+
+    </form>
+
+</div>
+
+</body>
+
+</html>
