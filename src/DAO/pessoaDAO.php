@@ -9,7 +9,7 @@ class PessoaDAO
 {
     private $conexao;
 
-    public function __construct()
+    public function __construct( )
     {
         $this->conexao = Conexao::conectar();
     }

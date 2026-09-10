@@ -1,9 +1,23 @@
 <?php
 
-require_once "../vendor/autoload.php";
+require_once __DIR__ . '/../src/Config/Conexao.php';
 
 use App\Config\Conexao;
 
-$pdo = Conexao::conectar();
+echo "1 - Arquivo PHP funcionando<br>";
 
-echo "Conectado com sucesso!";
+$conexao = Conexao::conectar();
+
+echo "2 - Conexão funcionando<br>";
+
+$sql = "SELECT * FROM pessoas";
+
+$stmt = $conexao->query($sql);
+
+echo "3 - Consulta funcionando<br>";
+
+$pessoas = $stmt->fetchAll();
+
+echo "<pre>";
+print_r($pessoas);
+echo "</pre>";
