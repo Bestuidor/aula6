@@ -80,18 +80,36 @@ class MovimentacaoDAO
 
 
     // LISTAR MOVIMENTAÇÕES
-    public function listar()
-    {
-        $sql = "SELECT
-                    m.*,
-                    p.nome
-                FROM movimentacao m
-                INNER JOIN pessoas p
-                    ON p.id = m.idPessoa
-                ORDER BY m.id DESC";
+  public function listar()
+{
+    $sql = "SELECT 
+                m.id,
+                m.idPessoa,
+                p.nome,
+                m.Credito,
+                m.Debito,
+                m.DataOperacao,
+                m.Observacao,
 
-        $stmt = $this->conexao->query($sql);
+                (
+                    SELECT 
+                        COALESCE(SUM(m2.Credito), 0) -
+                        COALESCE(SUM(m2.Debito), 0)
+                    FROM movimentacao m2
+                    WHERE m2.idPessoa = m.idPessoa
+                ) AS saldo
 
-        return $stmt->fetchAll();
-    }
+            FROM movimentacao m
+
+            INNER JOIN pessoas p
+                ON p.id = m.idPessoa
+
+            ORDER BY m.DataOperacao DESC";
+
+    $stmt = $this->conexao->prepare($sql);
+
+    $stmt->execute();
+
+    return $stmt->fetchAll();
+}
 }
